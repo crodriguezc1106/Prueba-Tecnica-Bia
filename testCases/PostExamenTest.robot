@@ -1,26 +1,48 @@
 *** Settings ***
-# Importamos las librerías necesarias para las pruebas
-
-Library    RequestsLibrary
-Library    OperatingSystem
-Library    Collections
-Library    Dialogs
-
+Library           RequestsLibrary
+Library           Collections
+Library           JSONLibrary
 
 *** Variables ***
-# Definimos la URL del endpoint de la API
-${url}        https://reqres.in/
+${URL}        https://reqres.in/api/users
+&{HEADERS}    Content-Type=application/json
+${DATA}       {"name": "Catherine Rodriguez", "job": "QA Automation"}
 
 *** Test Cases ***
-Escenario: 1.Crear un nuevo empleado por medio de una API
+Crear un nuevo empleado por medio de una API
+    Given el actor usa un metodo POST para crear un nuevo empleado
+    When se envía un name y job en el body de la solicitud
+    Then se recibe una respuesta tipo JSON
+    And se recibe el ID del empleado, que debe ser un entero positivo
+    And el mismo name de la solicitud
+    And el mismo job de la solicitud
+    And un status 201
 
-     Create Session    session1             ${url}
-     ${endpoint}       Set Variable         /api/users
-     ${body}=          Create Dictionary    name : camilo    job : autor
-     ${response}=      POST On Session      session1    ${endpoint}     data=${body}
-     Log To Console    ${response.status_code}
+*** Keywords ***
+el actor usa un metodo POST para crear un nuevo empleado
+    Create Session    session1    ${URL}   headers=&{HEADERS}
 
-     ${status_code}=    Convert To String    ${response.status_code}
-     Should Be Equal    ${status_code}           201
+se envía un name y job en el body de la solicitud
+    ${body}=          Convert String To Json   ${DATA}
+    ${response}=      POST On Session     session1   ${URL}     json=${body}   headers=&{HEADERS}
+    Set Global Variable    ${response}
 
-     ${json_response}=  Convert To String    ${response.content}
+se recibe una respuesta tipo JSON
+    Should Have Value In Json     ${response.json()}  $..name
+
+se recibe el ID del empleado, que debe ser un entero positivo
+    ${json}=    Set Variable    ${response.json()}
+    Set Global Variable    ${json}
+    Dictionary Should Contain Key    ${json}    id
+    Should Be True    ${json['id']} > 0
+
+el mismo name de la solicitud
+    Dictionary Should Contain Key    ${json}    name
+    Should Be Equal      ${json['name']}        ${DATA['name']}
+
+el mismo job de la solicitud
+    Dictionary Should Contain Key    ${json}    job
+    Should Be Equal      ${json['job']}        QA Automation
+
+un status 201
+    Should Be Equal As Strings    ${response.status_code}    201
