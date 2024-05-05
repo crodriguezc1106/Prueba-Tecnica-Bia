@@ -18,8 +18,9 @@ Proyecto desarrollado con Robot Framework para el primer punto de la prueba téc
 3. Vaya a la carpeta scripts en el **virtual environment:** `cd .venv/Scripts`.
 4. Active el **virtual environment** escribiendo `.\activate.ps1`. Virtual environment al ser activado, agrega el nombre en parentesis antes de la linea del cursor en la consola asi: 
 `(.venv) PS ...`.
-5. Instale las dependencias escribiendo `pip3 install -r requirements.txt`.
-6. Para desactivar el **virtual environment,** vaya de nuevo a la carpeta de scripts (`cd .venv/Scripts`) y luego escriba `.\deactivate.ps1`.
+5. Salga hacia la carpeta raiz del proyecto usando `cd ..` dos veces.
+6. Instale las dependencias escribiendo `pip3 install -r requirements.txt`.
+7. Para desactivar el **virtual environment,** vaya de nuevo a la carpeta de scripts (`cd .venv/Scripts`) y luego escriba `.\deactivate.ps1`.
 
 ### Ejecución del programa
 
