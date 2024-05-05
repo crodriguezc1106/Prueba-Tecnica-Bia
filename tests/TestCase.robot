@@ -38,7 +38,7 @@ se recibe el ID del empleado, que debe ser un entero positivo
 
 el mismo name de la solicitud
     Dictionary Should Contain Key    ${json}    name
-    Should Be Equal      ${json['name']}        ${DATA['name']}
+    Should Be Equal      ${json['name']}        Catherine Rodriguez
 
 el mismo job de la solicitud
     Dictionary Should Contain Key    ${json}    job
